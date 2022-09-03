@@ -5,6 +5,8 @@ import typing as t
 # print colored text
 def print_colored(skk): print("\033[93m {}\033[00m" .format(skk))
 
+Number = t.Union[int, float]
+
 
 def run(command, cwd: t.Optional[pathlib.Path] = None):
     msg = command
@@ -35,3 +37,11 @@ def get_output(command):
 # get current git hash
 def get_current_hash():
     return get_output('git rev-parse HEAD')
+
+def print_array(arr: t.List[Number]):
+    """
+    print an array of numbers and print index indicators that line up
+    """
+    print(' '.join([str(i) for i in range(len(arr))]))
+    print(' '.join([str(i) for i in arr]))
+
