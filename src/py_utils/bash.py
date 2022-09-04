@@ -38,10 +38,11 @@ def get_output(command):
 def get_current_hash():
     return get_output('git rev-parse HEAD')
 
-def print_array(arr: t.List[Number]):
+def print_array(arr: t.Union[t.List[int], t.List[float]]):
     """
     print an array of numbers and print index indicators that line up
     """
-    print(' '.join([str(i) for i in range(len(arr))]))
-    print(' '.join([str(i) for i in arr]))
+    out = [' '.join([str(i) for i in range(len(arr))])]
+    out += [' '.join([str(i) for i in arr])]
+    return '\n'+'\n'.join(out)+'\n'
 
