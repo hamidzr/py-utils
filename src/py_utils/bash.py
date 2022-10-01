@@ -29,9 +29,11 @@ def fails(command):
     return False
 
 # read command output
-def get_output(command):
+def get_output(command, strip=True):
+    print_colored(command)
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE)
-    return result.stdout.decode('utf-8')
+    out = result.stdout.decode('utf-8')
+    return out.strip() if strip else out
 
 
 # get current git hash
