@@ -1,10 +1,13 @@
 import subprocess
 import time
 import pathlib
+import sys
 import typing as t
 
 # print colored text
-def print_colored(skk): print("\033[93m {}\033[00m" .format(skk))
+def print_colored(skk):
+    print("\033[93m {}\033[00m".format(skk))
+
 
 Number = t.Union[int, float]
 
@@ -12,7 +15,7 @@ Number = t.Union[int, float]
 def run(command, cwd: t.Optional[pathlib.Path] = None):
     msg = command
     if cwd is not None:
-        msg = f'{command} [cwd: {cwd}]'
+        msg = f"{command} [cwd: {cwd}]"
     print_colored(msg)
     subprocess.run(command, cwd=cwd, check=True, shell=True)
 
@@ -29,26 +32,28 @@ def fails(command):
         return True
     return False
 
+
 # read command output
 def get_output(command, strip=True):
     print_colored(command)
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE)
-    out = result.stdout.decode('utf-8')
+    out = result.stdout.decode("utf-8")
     return out.strip() if strip else out
 
 
 # get current git hash
 def get_current_hash():
-    return get_output('git rev-parse HEAD')
+    return get_output("git rev-parse HEAD")
 
 
 def print_array(arr: t.Union[t.List[int], t.List[float]]):
     """
     print an array of numbers and print index indicators that line up
     """
-    out = [' '.join([str(i) for i in range(len(arr))])]
-    out += [' '.join([str(i) for i in arr])]
-    return '\n'+'\n'.join(out)+'\n'
+    out = [" ".join([str(i) for i in range(len(arr))])]
+    out += [" ".join([str(i) for i in arr])]
+    return "\n" + "\n".join(out) + "\n"
+
 
 def retry(func, timeout=5, *args, **kwargs):
     """
@@ -64,4 +69,5 @@ def retry(func, timeout=5, *args, **kwargs):
                 raise e
             time.sleep(0.1)
 
-LINUX_DATE_FMT = '%a %b %d %H:%M:%S PDT %Y'
+
+LINUX_DATE_FMT = "%a %b %d %H:%M:%S PDT %Y"

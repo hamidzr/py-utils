@@ -1,20 +1,33 @@
 import subprocess
-import time
 
 from py_utils.v1.bash import retry
+
 
 def get_window_id(name: str, timeout=None) -> str:
     """
     get the window id of the first window with a given name.
     waits until the window is found.
     """
+
     def _get_window_id():
-        return subprocess.check_output(["xdotool", "search", "--name", name]).decode("utf-8").strip()
+        return (
+            subprocess.check_output(["xdotool", "search", "--name", name])
+            .decode("utf-8")
+            .strip()
+        )
+
     if timeout is None:
         return _get_window_id()
     else:
         return retry(_get_window_id, timeout=timeout)
 
+
+def window_name_exists(name: str) -> bool:
+    try:
+        get_window_id(name, timeout=None)
+    except subprocess.CalledProcessError:
+        return False
+    return True
 
 
 def type_window(wid, text):
@@ -22,8 +35,10 @@ def type_window(wid, text):
     # subprocess.call(["xdotool", "windowactivate", wid])
     subprocess.call(["xdotool", "type", "--window", wid, text])
 
+
 def key_window(wid, key):
     subprocess.call(["xdotool", "key", "--window", wid, key])
+
 
 def execute_script(wid: str, script: str):
     """
@@ -33,7 +48,7 @@ def execute_script(wid: str, script: str):
     """
     script = script.strip()
     for line in script.splitlines():
-        # line = line.strip()
+        line = line.lstrip()
         if line.startswith("t "):
             type_window(wid, line[2:])
         elif line.startswith("k "):

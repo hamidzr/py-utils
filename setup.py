@@ -35,8 +35,10 @@ setuptools.setup(
     },
     packages=setuptools.find_packages(where="src"),
     include_package_data=True,
-    install_requires=[
-        "typer"
-    ],
-    entry_points={"console_scripts": ["py_utils = py_utils.__main__:app",]},
+    install_requires=["typer"],
+    entry_points={
+        "console_scripts": [
+            "py_utils = py_utils.__main__:app",
+        ]
+    },
 )
