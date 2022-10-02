@@ -1,4 +1,5 @@
 import subprocess
+import time
 import pathlib
 import typing as t
 
@@ -49,5 +50,18 @@ def print_array(arr: t.Union[t.List[int], t.List[float]]):
     out += [' '.join([str(i) for i in arr])]
     return '\n'+'\n'.join(out)+'\n'
 
+def retry(func, timeout=5, *args, **kwargs):
+    """
+    retry a function call until it succeeds with a timeout
+    timeout is in seconds
+    """
+    start = time.time()
+    while True:
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            if time.time() - start > timeout:
+                raise e
+            time.sleep(0.1)
 
 LINUX_DATE_FMT = '%a %b %d %H:%M:%S PDT %Y'

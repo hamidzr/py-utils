@@ -1,18 +1,28 @@
 import subprocess
+import time
 
-def get_window_id(name: str) -> str:
-    # pid not alway present
-    vim_wid = subprocess.check_output(["xdotool", "search", "--name", name]).decode().strip()
-    return vim_wid
+from py_utils.v1.bash import retry
+
+def get_window_id(name: str, timeout=None) -> str:
+    """
+    get the window id of the first window with a given name.
+    waits until the window is found.
+    """
+    def _get_window_id():
+        return subprocess.check_output(["xdotool", "search", "--name", name]).decode("utf-8").strip()
+    if timeout is None:
+        return _get_window_id()
+    else:
+        return retry(_get_window_id, timeout=timeout)
+
+
 
 def type_window(wid, text):
     # send keys to vim wid
     # subprocess.call(["xdotool", "windowactivate", wid])
-    print("typing: " + text)
     subprocess.call(["xdotool", "type", "--window", wid, text])
 
 def key_window(wid, key):
-    print("key: " + key)
     subprocess.call(["xdotool", "key", "--window", wid, key])
 
 def execute_script(wid: str, script: str):
