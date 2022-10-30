@@ -1,6 +1,10 @@
 import subprocess
-
+import logging
+from py_utils.v1.config import config
+from py_utils.v1.proc import wrap_arg_for_shell
 from py_utils.v1.bash import retry
+
+logger = logging.getLogger(__name__)
 
 
 def get_window_id(name: str, timeout=None) -> str:
@@ -8,6 +12,7 @@ def get_window_id(name: str, timeout=None) -> str:
     get the window id of the first window with a given name.
     waits until the window is found.
     """
+    assert isinstance(name, str)
 
     def _get_window_id():
         return (
@@ -30,14 +35,29 @@ def window_name_exists(name: str) -> bool:
     return True
 
 
+def window_exists(wid: str) -> bool:
+    try:
+        subprocess.check_output(["xdotool", "getwindowname", wid])
+    except subprocess.CalledProcessError:
+        return False
+    return True
+
+
+# different layout workaround
+# reset to XTEST keyboard https://github.com/jordansissel/xdotool/issues/150#issuecomment-966198633
+LAYOUT_PREFIX = ["xdotool", "key", "--clearmodifiers", "shift", "&&"]
+
+
 def type_window(wid, text):
-    # send keys to vim wid
-    # subprocess.call(["xdotool", "windowactivate", wid])
-    subprocess.call(["xdotool", "type", "--window", wid, text])
+    logger.debug(f"typing {text} wid={wid}")
+    cmd = LAYOUT_PREFIX + ["xdotool", "type", "--window", wid, wrap_arg_for_shell(text)]
+    subprocess.call(" ".join(cmd), shell=True)
 
 
 def key_window(wid, key):
-    subprocess.call(["xdotool", "key", "--window", wid, key])
+    logger.debug(f"pressing {key} wid={wid}")
+    cmd = LAYOUT_PREFIX + ["xdotool", "key", "--window", wid, key]
+    subprocess.call(" ".join(cmd), shell=True)
 
 
 def execute_script(wid: str, script: str):
@@ -55,3 +75,22 @@ def execute_script(wid: str, script: str):
             key_window(wid, line[2:])
         else:
             raise ValueError("unknown command: " + line)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    logging.basicConfig(level=config.log_level)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("name")
+    args = parser.parse_args()
+
+    wid = get_window_id(args.name)
+    key_window(wid, "Escape")
+    execute_script(
+        wid,
+        """
+k Escape
+                   """,
+    )

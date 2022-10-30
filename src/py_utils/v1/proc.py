@@ -28,3 +28,16 @@ def debounce(wait: int):
         return debounced
 
     return decorator
+
+
+def wrap_arg_for_shell(text: str) -> str:
+    """
+    wrap text in quotes and escape quotes
+    """
+    # use .format
+    # https://stackoverflow.com/questions/35817/how-to-escape-os-system-calls-in-python
+    return "'{}'".format(text.replace("'", "'\\''"))
+
+
+def to_shell_arg(args: list) -> str:
+    return " ".join([wrap_arg_for_shell(arg) for arg in args])

@@ -57,7 +57,7 @@ def print_array(arr: t.Union[t.List[int], t.List[float]]):
 
 def retry(func, timeout=5, *args, **kwargs):
     """
-    retry a function call until it succeeds with a timeout
+    retry a function call until it doesn't raise with a timeout
     timeout is in seconds
     """
     start = time.time()
@@ -68,6 +68,18 @@ def retry(func, timeout=5, *args, **kwargs):
             if time.time() - start > timeout:
                 raise e
             time.sleep(0.1)
+
+
+def wait_until(predicate, timeout, period=0.1, *args, **kwargs):
+    """
+    repeatedly call a predicate function until it returns True
+    """
+    mustend = time.time() + timeout
+    while time.time() < mustend:
+        if predicate(*args, **kwargs):
+            return True
+        time.sleep(period)
+    return False
 
 
 LINUX_DATE_FMT = "%a %b %d %H:%M:%S PDT %Y"
