@@ -46,17 +46,25 @@ def window_exists(wid: str) -> bool:
 # different layout workaround
 # reset to XTEST keyboard https://github.com/jordansissel/xdotool/issues/150#issuecomment-966198633
 LAYOUT_PREFIX = ["xdotool", "key", "--clearmodifiers", "shift", "&&"]
+# https://github.com/jordansissel/xdotool/issues/43
+LAYOUT_SUFFIX = (
+    ""  #  "&& xdotool keyup Meta_L Meta_R Alt_L Alt_R Super_L Super_R Shift_L Shift_R"
+)
 
 
 def type_window(wid, text):
     logger.debug(f"typing {text} wid={wid}")
-    cmd = LAYOUT_PREFIX + ["xdotool", "type", "--window", wid, wrap_arg_for_shell(text)]
+    cmd = (
+        LAYOUT_PREFIX
+        + ["xdotool", "type", "--window", wid, wrap_arg_for_shell(text)]
+        + [LAYOUT_SUFFIX]
+    )
     subprocess.call(" ".join(cmd), shell=True)
 
 
 def key_window(wid, key):
     logger.debug(f"pressing {key} wid={wid}")
-    cmd = LAYOUT_PREFIX + ["xdotool", "key", "--window", wid, key]
+    cmd = LAYOUT_PREFIX + ["xdotool", "key", "--window", wid, key] + [LAYOUT_SUFFIX]
     subprocess.call(" ".join(cmd), shell=True)
 
 
