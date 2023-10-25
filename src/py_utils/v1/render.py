@@ -1,4 +1,6 @@
 import re
+import json
+from typing import Any
 
 SubVariables = (
     dict[str, "SubVariables"] | list["SubVariables"] | str | int | float | bool | None
@@ -62,4 +64,7 @@ def human_readable_dict(d: Variables) -> Variables:
 
     return {k: format_value(v) for k, v in d.items()}
 
+
+def pretty_json(d: Any) -> str:
+    return json.dumps(d, indent=4, sort_keys=True)
 
