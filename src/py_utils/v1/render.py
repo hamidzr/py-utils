@@ -1,11 +1,12 @@
-import re
 import json
+import re
 from typing import Any
 
 SubVariables = (
     dict[str, "SubVariables"] | list["SubVariables"] | str | int | float | bool | None
 )
 Variables = dict[str, SubVariables]
+
 
 def ensure_max_precision(num: float | int, precision: int = 1) -> int | float:
     """
@@ -67,4 +68,3 @@ def human_readable_dict(d: Variables) -> Variables:
 
 def pretty_json(d: Any) -> str:
     return json.dumps(d, indent=4, sort_keys=True)
-

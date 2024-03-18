@@ -1,8 +1,9 @@
-import subprocess
 import logging
+import subprocess
+
+from py_utils.v1.bash import retry
 from py_utils.v1.config import config
 from py_utils.v1.proc import wrap_arg_for_shell
-from py_utils.v1.bash import retry
 
 logger = logging.getLogger(__name__)
 

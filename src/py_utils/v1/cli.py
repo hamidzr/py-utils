@@ -1,7 +1,8 @@
-import sys
 import re
 import subprocess
+import sys
 from typing import List
+
 
 # decorator to handle ctrl+c in cli
 def handle_ctrl_c(func):
@@ -11,7 +12,9 @@ def handle_ctrl_c(func):
         except KeyboardInterrupt:
             print("\n\nExiting due to keyboard interrupt...")
             sys.exit(0)
+
     return wrapper
+
 
 def fuzzy_match(query: str, string: str) -> bool:
     """fuzzy match query as regex to string
@@ -21,6 +24,7 @@ def fuzzy_match(query: str, string: str) -> bool:
         query = query[1:-1]
         return bool(re.search(query, string, re.IGNORECASE))
     return query in string
+
 
 def interactive_pick_text(options: List[str]) -> str:
     """interactive pick from options"""
@@ -32,9 +36,10 @@ def interactive_pick_text(options: List[str]) -> str:
             choice = int(input("Enter your choice: "))
             if choice < 1 or choice > len(options):
                 raise ValueError
-            return options[choice-1]
+            return options[choice - 1]
         except ValueError:
             print("Invalid choice, try again...")
+
 
 def interactive_pick_dmenu(options: List[str]) -> str:
     out = subprocess.run(

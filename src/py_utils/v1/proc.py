@@ -1,6 +1,6 @@
 import subprocess
-import typing as t
 import threading
+import typing as t
 
 
 def exits_with(code: int, cmd: t.List[str]) -> bool:
