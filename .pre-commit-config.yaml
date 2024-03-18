@@ -2,7 +2,7 @@
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
@@ -13,7 +13,6 @@ repos:
       - id: check-case-conflict
       - id: check-docstring-first
       - id: check-executables-have-shebangs
-      - id: check-shebang-scripts-are-executable
       - id: check-merge-conflict
       - id: check-symlinks
       - id: check-toml
@@ -39,7 +38,7 @@ repos:
       - id: check-json5
 
   - repo: https://github.com/psf/black
-    rev: 23.7.0
+    rev: 23.11.0
     hooks:
       - id: black
 
@@ -50,7 +49,7 @@ repos:
         args: [--disable=all]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.4.1
+    rev: v1.7.1
     hooks:
       - id: mypy
         exclude: ^tests/
@@ -62,7 +61,7 @@ repos:
   #   - id: isort
 
   - repo: https://github.com/JohnnyMorganz/StyLua
-    rev: v0.18.1
+    rev: v0.19.1
     hooks:
       - id: stylua # or stylua-system / stylua-github
 
@@ -80,7 +79,7 @@ repos:
       - id: go-ruleguard
 
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.10.0
+    rev: v2.11.0
     hooks:
       - id: pretty-format-golang
       - id: pretty-format-ini
@@ -105,9 +104,11 @@ repos:
           - -i
           - "2"
   - repo: https://github.com/pycqa/flake8
-    rev: "6.0.0"
+    rev: "6.1.0"
     hooks:
       - id: flake8
+        args: ["--max-line-length=100"]
+
   - repo: https://github.com/pycqa/isort
     rev: 5.12.0
     hooks:
