@@ -1,5 +1,7 @@
 import json
 import re
+import shutil
+import subprocess
 from typing import Any
 
 SubVariables = (
@@ -67,4 +69,11 @@ def human_readable_dict(d: Variables) -> Variables:
 
 
 def pretty_json(d: Any) -> str:
-    return json.dumps(d, indent=4, sort_keys=True)
+    if shutil.which("jq"):
+        json_str = json.dumps(d)
+        result = subprocess.run(
+            ["jq", ".", "-C"], input=json_str, text=True, capture_output=True
+        )
+        return result.stdout
+    else:
+        return json.dumps(d, indent=4, sort_keys=True)
