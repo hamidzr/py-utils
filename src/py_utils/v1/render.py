@@ -2,7 +2,7 @@ import json
 import re
 import shutil
 import subprocess
-from typing import Any
+from typing import Any, Optional
 
 SubVariables = (
     dict[str, "SubVariables"] | list["SubVariables"] | str | int | float | bool | None
@@ -77,3 +77,35 @@ def pretty_json(d: Any) -> str:
         return result.stdout
     else:
         return json.dumps(d, indent=4, sort_keys=True)
+
+
+def explore_object(
+    obj: object, path: str = "", depth: int = 0, visited: Optional[set] = None
+) -> None:
+    """recursively explore properties and methods of an object with depth limit and cycle detection"""
+    if visited is None:
+        visited = set()
+
+    # avoid revisiting the same objects
+    obj_id = id(obj)
+    if obj_id in visited:
+        return
+    visited.add(obj_id)
+
+    # print the current path except the initial call
+    if path:
+        print(path)
+
+    # depth limit to avoid too deep recursion
+    if depth > 10:
+        return
+
+    for attr in dir(obj):
+        if attr.startswith("__"):
+            continue  # skip dunder methods
+        item = getattr(obj, attr)
+        new_path = f"{path}/{attr}" if path else attr
+        if callable(item) or not hasattr(item, "__dict__"):
+            print(new_path)
+        else:
+            explore_object(item, new_path, depth + 1, visited)

@@ -42,6 +42,9 @@ def interactive_pick_text(options: List[str]) -> str:
 
 
 def interactive_pick_dmenu(options: List[str]) -> str:
+    options = list(dict.fromkeys(options))
+    if len(options) == 1:
+        return options[0]
     out = subprocess.run(
         ["_themenu.sh", "-p", "Select SSID"],
         input="\n".join(options),
