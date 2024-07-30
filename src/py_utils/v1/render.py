@@ -2,7 +2,7 @@ import json
 import re
 import shutil
 import subprocess
-from typing import Any, Optional
+from typing import Any, Dict, Literal, Optional
 
 SubVariables = (
     dict[str, "SubVariables"] | list["SubVariables"] | str | int | float | bool | None
@@ -69,6 +69,16 @@ def human_readable_dict(d: Variables) -> Variables:
 
 
 def pretty_json(d: Any) -> str:
+    """
+    pretty format the given data structure prepared for printing.
+    """
+    if isinstance(d, str):
+        try:
+            d = json.loads(d)
+        except json.JSONDecodeError:
+            pass
+    if not isinstance(d, dict):
+        return d
     if shutil.which("jq"):
         json_str = json.dumps(d)
         result = subprocess.run(
@@ -109,3 +119,23 @@ def explore_object(
             print(new_path)
         else:
             explore_object(item, new_path, depth + 1, visited)
+
+
+ColorType = Literal["red", "green", "yellow", "blue", "magenta", "cyan", "white"]
+
+colors: Dict[ColorType, str] = {
+    "red": "\033[91m",
+    "green": "\033[92m",
+    "yellow": "\033[93m",
+    "blue": "\033[94m",
+    "magenta": "\033[95m",
+    "cyan": "\033[96m",
+    "white": "\033[97m",
+}
+
+
+def print_colored(text: str, color: ColorType) -> None:
+    # reset color to default
+    reset = "\033[0m"
+    # print colored text using imported colors
+    print(f"{colors[color]}{text}{reset}")

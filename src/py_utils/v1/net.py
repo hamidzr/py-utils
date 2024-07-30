@@ -3,6 +3,17 @@ import subprocess
 from typing import Optional
 
 
+def is_local_ip(ip_address: str) -> bool:
+    """
+    Check if the IP address is a local IP address.
+    """
+    return (
+        ip_address.startswith("192.168.")
+        or ip_address.startswith("10.")
+        or ip_address.startswith("172.16.")
+    )
+
+
 def get_first_hop_ip() -> Optional[str]:
     # run traceroute to a common address like google
     result = subprocess.run(
