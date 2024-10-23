@@ -41,6 +41,11 @@ def human_readable_number(v: float | int) -> str | float | int:
         digits = ensure_max_precision(v, 1)
     elif v < 1:
         digits = ensure_max_precision(v, 4)
+    else:
+        digits = ensure_max_precision(v, 1)
+
+    if isinstance(digits, float) and digits.is_integer():
+        digits = int(digits)
 
     if sign == "":
         return digits
